@@ -57,14 +57,33 @@ int readDB(){
 
 }
 
+static int callback(void *data, int argc, char **argv, char **azColName){
+   int i;
+
+   char result[512] = "";
+
+
+   for(i = 0; i<argc; i++){
+      strcat(data, azColName[i]);
+      strcat(result, " = ");
+      strcat(result, argv[i] ? argv[i] : "NULL");
+      strcat(result, "\n");  
+   }
+   
+   strcat(result,"\n");
+   printf("%s\n", result );
+//   fprintf(stderr, "%s: ", (const char*)data);
+   return 0;
+}
+
+
 int getSensorsDB(){
   sqlite3 *db;
   char *err_msg;
   sqlite3_stmt *stmt;
   char req[255];
   int rc, s;
-
-        printf("%s\n", "entro" );
+  const char* data = "Callback function called";
 
 
   // initialisation de la graine pour les nbs aléatoires
@@ -78,27 +97,64 @@ int getSensorsDB(){
 
   // préparation de la requête
   rc=sqlite3_prepare_v2(db, req, -1, &stmt, 0);
-  // parcours des enregistrements
-  while(1){
-    // lecture de l'enregistrement suivant
-    s=sqlite3_step(stmt);
-    // enregistrement existant
-    if (s==SQLITE_ROW){
-      // récupération de la valeur de la colonne valeur
+  rc = sqlite3_exec(db, req, callback, (void*)data, &err_msg);
 
-      const unsigned char *val1=sqlite3_column_text(stmt, 0);
-      const unsigned char *val2=sqlite3_column_text(stmt, 1);
-      const unsigned char *val3=sqlite3_column_text(stmt, 2);
-      printf("%s\n", val1 );
-      printf("%s\n", val2 );
-      printf("%s\n", val3 );
+  // fermeture de la base de données
+  sqlite3_close(db);
+  return 0;
 
-      //add to web graphic
-    }
-    // parcours terminé
-    else if (s==SQLITE_DONE)
-      break;
-  }
+}
+
+
+int getTypesDB(){
+  sqlite3 *db;
+  char *err_msg;
+  sqlite3_stmt *stmt;
+  char req[255];
+  int rc, s;
+  const char* data = "Callback function called";
+
+
+  // initialisation de la graine pour les nbs aléatoires
+  srand((unsigned int)time(NULL));
+
+  // ouverture de la base de données
+  rc=sqlite3_open("database.db", &db);
+  
+  // requête SQL select
+  sprintf(req,"SELECT * FROM TypeCapteurs;");
+
+  // préparation de la requête
+  rc=sqlite3_prepare_v2(db, req, -1, &stmt, 0);
+  rc = sqlite3_exec(db, req, callback, (void*)data, &err_msg);
+
+  // fermeture de la base de données
+  sqlite3_close(db);
+  return 0;
+
+}
+
+int getPiecesDB(){
+  sqlite3 *db;
+  char *err_msg;
+  sqlite3_stmt *stmt;
+  char req[255];
+  int rc, s;
+  const char* data = "Callback function called";
+
+
+  // initialisation de la graine pour les nbs aléatoires
+  srand((unsigned int)time(NULL));
+
+  // ouverture de la base de données
+  rc=sqlite3_open("database.db", &db);
+  
+  // requête SQL select
+  sprintf(req,"SELECT * FROM Pieces;");
+
+  // préparation de la requête
+  rc = sqlite3_exec(db, req, callback, (void*)data, &err_msg);
+
   // fermeture de la base de données
   sqlite3_close(db);
   return 0;

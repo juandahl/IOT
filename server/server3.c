@@ -9,15 +9,32 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <time.h>
+#include <string.h>
 #include "services.c"
 
 //buffer declaration
-char buffer [256];
 
 void processRequest(int newSocket, char buffer[256]){
-	printf("%s\n", buffer );
 	//parseEntryDB(newSocket, buffer);
-	getSensors(newSocket);
+	//getSensors(newSocket);
+	//getTypes(newSocket);
+	//getPieces(newSocket);
+
+	char reply[20480];
+	char file [20480];
+	FILE *fp;
+	strcpy(reply, "HTTP/1.1 200 OK\n");
+	strcat(reply, "Content-Type: text/html; charset=utf-8\n\n");
+	fp=fopen("./index.html", "r");
+	long length; 
+	length = ftell(fp);
+
+	fread(file, sizeof(char[20480]), sizeof(length), fp);
+
+	strcat(reply, file);
+	write(newSocket, reply, strlen(reply));
+	send(newSocket , reply , strlen(reply), 0);
+	fclose(fp);
 }
 
 void *newRequest(void *arg){

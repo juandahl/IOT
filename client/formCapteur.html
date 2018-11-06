@@ -9,24 +9,37 @@
 <div class="container">
   <div class="row">
     <div class="col-sm-4 col-sm-offset-4">
-      <h2 class="text-center">Welcome back.</h2>
+      <h2 class="text-center">Add a new Sensor</h2>
       <form role="form">
   <div class="form-group">
-    <label for="exampleInputEmail1">Email address</label>
-    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+    <label for="type">Type</label>
+    <input class="form-control" id="type" placeholder="Enter type">
   </div>
   <div class="form-group">
-    <label for="exampleInputPassword1">Password</label>
-    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+    <label for="port">Port</label>
+    <input type="number" class="form-control" id="port" placeholder="Enter the port number">
   </div>
-  
-  <div class="checkbox">
-    <label>
-      <input type="checkbox"> Remember me
-    </label>
+  <div class="form-group">
+    <div class="row">
+      <label for="X">X</label>
+      <input type="number" class="form-control" id="X" placeholder="X location">
+      <label for="Y">Y</label>
+      <input type="number" class="form-control" id="Y" placeholder="Y location">
+      <label for="Z">Z</label>
+      <input type="number" class="form-control" id="Z" placeholder="Z location">
+    </div>
+
   </div>
-  <button type="submit" class="btn btn-default">Submit</button>
+  <div class="form-group">
+
+    <label for="X">Unite</label>
+    <input type="number" class="form-control" id="X" placeholder="X location">
+    <label for="Y">Precision</label>
+    <input type="number" class="form-control" id="Y" placeholder="Y location">
+  </div>
+
   <a type="submit" class="btn btn-default" href="index.html">Back to home</a>
+  <button type="submit" class="btn btn-default">Add</button>
 
 </form>
     </div>

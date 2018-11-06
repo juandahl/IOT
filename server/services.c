@@ -3,11 +3,25 @@
 #include<unistd.h>    //write
 #include <stdlib.h>
 #include <time.h>
-//#include <curl/curl.h>
+#include <curl/curl.h>
 #include "repository.c"
 
 void getSensors(int newSocket){
 	getSensorsDB();
+	//Send the message back to client
+	write(newSocket, "Cest fini", 255);
+
+}
+
+void getTypes(int newSocket){
+	getTypesDB();
+	//Send the message back to client
+	write(newSocket, "Cest fini", 255);
+
+}
+
+void getPieces(int newSocket){
+	getPiecesDB();
 	//Send the message back to client
 	write(newSocket, "Cest fini", 255);
 
@@ -39,9 +53,9 @@ void parseEntryDB(int newSocket, char buffer[256]){
 }
 
 
-/*
+
 //Implementation apiREST get
-void getWheather(){
+int getWheather(){
   CURL *curl;
   CURLcode res;
  
@@ -58,11 +72,11 @@ void getWheather(){
     if(res != CURLE_OK)
       fprintf(stderr, "curl_easy_perform() failed: %s\n",
               curl_easy_strerror(res));
- 
+
     // always cleanup  
     curl_easy_cleanup(curl);
   }
   return 0;
 
 }
-*/
+
