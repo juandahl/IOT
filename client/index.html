@@ -1,113 +1,80 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>IOT - DAHL</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link rel="stylesheet" type="text/css" href="index.css">
-  <link rel="stylesheet" type="text/css" href="./sidebar.css">
-  <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-    <script>
-    $("#menu-toggle").click(function(e) {
-        e.preventDefault();
-        $("#wrapper").toggleClass("toggled");
-    });
-    </script>
-    <script type="text/javascript">
-      function httpGet(theUrl)
-      {
-        var xmlHttp = new XMLHttpRequest();
-        xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
-        xmlHttp.send( null );
-        return xmlHttp.responseText;
-      }
-      httpGet(localhost:8000);
-    </script>
-</head>
+<!DOCTYPE HTML>
+<html>
+  <head>
+  	<title>IOT - DAHL</title>
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta.2/css/bootstrap.css">
+ 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+ 	<script src="https://unpkg.com/popper.js"></script>
+ 	<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+ 	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
+  </head>
+  <body>
 
-<body>
-<div>
-<nav class="navbar navbar-inverse">
-  <div class="container-fluid">
-  </div>
-</nav>
+	<nav class="navbar fixed-top navbar-expand-md navbar-light bg-light">
+		  <div class="container">
+		    <a class="navbar-brand" href="index.html">LOGEMENT ECO-RESPONSABLE</a>
+		    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+		        <span class="navbar-toggler-icon"></span>
+		      </button>
+		    <div class="collapse navbar-collapse" id="navbarCollapse">
+		      <ul class="navbar-nav mr-auto">
+		        <li class="nav-item active">
+		          <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
+		        </li>
+		        <li class="nav-item">
+		          <a class="nav-link" href="Consumption.html">Consumption</a>
+		        </li>
+		        <li class="nav-item">
+                <a class="nav-link" href="state.html">State</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="formCapteur.html">Settings</a>
+            </li>  
+          </ul>
+		    </div>
+		  </div>
+		</nav>
 
-<div id="wrapper">
+		<main role="main" class="container">
+		  <div class="row">
+		    <div class="col">
+		      <div class="jumbotron">
+		        <h1 class="display-2">Welcome</h1>
 
-<!-- Sidebar -->
-<div id="sidebar-wrapper">
-    <ul class="sidebar-nav">
-        <li class="sidebar-brand">
-            <a href="index.html"> Home </a>
-        </li>
-        <li>
-            <a href="Consumption.html">Consumption</a>
-        </li>
-        <li>
-            <a href="state.html">State Sensors </a>
-        </li>
-        <li>
-            <a href="#">Savings</a>
-        </li>
-        <li>
-            <a href="formCapteur.html">Settings</a>
-        </li>
-    </ul>
-</div>
-
-<!-- /#sidebar-wrapper -->
-
-  <!-- Page Content -->
-  <div id="page-content-wrapper">
-      <div class="container-fluid">
-              <div class="col-lg-12">
-                  <h1>Welcome</h1>
-                  <div class="w3-card-4 w3-margin w3-center" style="width:80%">
-                    <div class="w3-display-container w3-text-white">
-                      <img src="paris.jpg" alt="Lights" style="width:100%">
-                      <div class="w3-xlarge w3-display-bottomleft w3-padding">PARIS 20&deg; C</div>
-                    </div>
-                    <div class="w3-cell-row">
-                      <div class="w3-third w3-center">
-                        <h3>MON</h3>
-                        <p>PARIS 10&deg; C</p>
-                      </div>
-                      <div class="w3-third w3-center">
-                        <h3>TUE</h3>
-                        <p>PARIS 10&deg; C</p>
-                      </div>
-                      <div class="w3-third w3-center w3-margin-bottom">
-                        <h3>WED</h3>
-                        <p>PARIS 10&deg; C</p>
-                      </div>
-                      <div class="w3-third w3-center w3-margin-bottom">
-                        <h3>THU</h3>
-                        <p>PARIS 10&deg; C</p>
-                      </div>
-
-                    </div>
-                  </div>
-                  <p>Another thing</p>
-              </div>
-      </div>
-  </div>
-  <!-- /#page-content-wrapper -->
-</div>
-    
-<footer class="container-fluid text-center">
-  <p>Sorbonne Université</p>
-  <br/>
-  <p> Juan Dahl - juandahl20@gmail.com</p>
-</footer>
-
-</div>
-
-</body>
+	                  <div class="w3-card-4 w3-margin w3-center" style="width:80%">
+	                    <div class="w3-display-container w3-text-white">
+	                      <img src="https://cdn.pariscityvision.com/media/catalog/product/cache/1/image/755x433/9df78eab33525d08d6e5fb8d27136e95/P/a/Paris-Night-Bike-Tour-5890679b649c2.jpeg" alt="Lights" style="width:100%">
+	                      <div class="w3-xlarge w3-display-bottomleft w3-padding">PARIS 20&deg; C</div>
+	                    </div>
+	                    <div class="w3-cell-row">
+	                      <div class="w3-third w3-center">
+	                        <h3>MON</h3>
+	                        <p>PARIS 10&deg; C</p>
+	                      </div>
+	                      <div class="w3-third w3-center">
+	                        <h3>TUE</h3>
+	                        <p>PARIS 10&deg; C</p>
+	                      </div>
+	                      <div class="w3-third w3-center">
+	                        <h3>WED</h3>
+	                        <p>PARIS 10&deg; C</p>
+	                      </div>
+	                      <div class="w3-third w3-center">
+	                        <h3>THU</h3>
+	                        <p>PARIS 10&deg; C</p>
+	                      </div>
+	                    </div>
+		      </div>
+		    </div>
+		  </div>
+		<footer class="container mt-4">
+		  <div class="row">
+		    <div class="col">
+  			  <p class="text-center"><b>Sorbonne Universit&eacute</b></a></p>
+		      <p class="text-center"><b>Juan Dahl - juan.dahl@etu.upmc.fr</b></a></p>
+		    </div>
+		  </div>
+		</footer>
+  </body>
 </html>

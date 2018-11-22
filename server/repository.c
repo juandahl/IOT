@@ -5,16 +5,6 @@
 #include <time.h>
 
 
-// retourne un entier aléatoire entre 0 et n
-int int_rand(int n){
-  return (rand()%n);
-}
-
-// return un float aléatoire entre 0 et f
-float float_rand(float f){
-  return (((float)rand()/(float)(RAND_MAX)) * f);
-}
-
 int readDB(){
   sqlite3 *db;
   char *err_msg;
@@ -57,34 +47,95 @@ int readDB(){
 
 }
 
-static int callback(void *data, int argc, char **argv, char **azColName){
-   int i;
+static int callback(void * sensor, int argc, char **argv, char **azColName){
+    strcat(sensor,"<tr>\n");
+    char coord[20];
+    char x[4],y[4],z[4];
+    for(int i=0; i<argc; i++){
+      if(strcmp(azColName[i], "id_capteur") == 0)
+      {
+          strcat(sensor,"<th scope=\"row\">");
+          strcat(sensor,argv[i] ? argv[i] : NULL);
+          strcat(sensor,"</th>\n");
+      }
+      if ( (strcmp(azColName[i], "port") == 0) || (strcmp(azColName[i], "date_insertion") == 0) ) 
+      {
+          strcat(sensor,"<td>");
+          strcat(sensor,argv[i] ? argv[i] : NULL);
+          strcat(sensor,"</td>\n");
+      }
+      if (strcmp(azColName[i], "id_piece") == 0)  
+      {
+          strcat(sensor,"<td>");
+          getPieceDB(argv[i], sensor);
+          strcat(sensor,"</td>\n");
+      }
 
-   char result[512] = "";
+      if (strcmp(azColName[i], "id_type") == 0)  
+      {
+          strcat(sensor,"<td>");
+          getTypeDB(argv[i], sensor);
+          strcat(sensor,"</td>\n");
+      }
 
+    }
 
-   for(i = 0; i<argc; i++){
-      strcat(data, azColName[i]);
-      strcat(result, " = ");
-      strcat(result, argv[i] ? argv[i] : "NULL");
-      strcat(result, "\n");  
-   }
-   
-   strcat(result,"\n");
-   printf("%s\n", result );
-//   fprintf(stderr, "%s: ", (const char*)data);
-   return 0;
+   strcat(sensor,"</tr>\n");  
+
+    return 0;
 }
 
 
-int getSensorsDB(){
+static int responsePiece(void * sensor, int argc, char **argv, char **azColName){
+    char coord[20];
+    char x[4],y[4],z[4];
+    for(int i=0; i<argc; i++){
+      if(strcmp(azColName[i], "x") == 0)
+          strcpy(x, argv[i]);
+
+      if(strcmp(azColName[i], "y") == 0)
+          strcpy(y, argv[i]);
+
+      if(strcmp(azColName[i], "z") == 0)
+          strcpy(z, argv[i]);
+    }
+    strcpy(coord, "(");
+    strcat(coord, x);
+    strcat(coord, ", ");
+    strcat(coord, y);
+    strcat(coord, ", ");
+    strcat(coord, z);
+    strcat(coord, ")");
+    strcat(sensor, coord);
+    return 0;
+}
+
+
+static int responseType(void * sensor, int argc, char **argv, char **azColName){
+    char unite[10],precision[4];
+    for(int i=0; i<argc; i++){
+      if(strcmp(azColName[i], "unite") == 0)
+          strcpy(unite, argv[i]);
+
+      if(strcmp(azColName[i], "precision") == 0)
+          strcpy(precision, argv[i]);
+    }
+    strcat(sensor, unite);
+    strcat(sensor,"</td>\n");
+    strcat(sensor,"<td>");
+    strcat(sensor, precision);
+
+
+    return 0;
+}
+
+
+int getSensorsDB(char *data){
   sqlite3 *db;
   char *err_msg;
   sqlite3_stmt *stmt;
   char req[255];
   int rc, s;
-  const char* data = "Callback function called";
-
 
   // initialisation de la graine pour les nbs aléatoires
   srand((unsigned int)time(NULL));
@@ -98,7 +149,6 @@ int getSensorsDB(){
   // préparation de la requête
   rc=sqlite3_prepare_v2(db, req, -1, &stmt, 0);
   rc = sqlite3_exec(db, req, callback, (void*)data, &err_msg);
-
   // fermeture de la base de données
   sqlite3_close(db);
   return 0;
@@ -106,7 +156,7 @@ int getSensorsDB(){
 }
 
 
-int getTypesDB(){
+int getTypeDB(char *id, char *sensor){
   sqlite3 *db;
   char *err_msg;
   sqlite3_stmt *stmt;
@@ -122,11 +172,13 @@ int getTypesDB(){
   rc=sqlite3_open("database.db", &db);
   
   // requête SQL select
-  sprintf(req,"SELECT * FROM TypeCapteurs;");
+  strcpy(req,"SELECT * FROM TypeCapteurs WHERE id_type=" );
+  strcat(req, id);
+  strcat(req, ";");
 
   // préparation de la requête
   rc=sqlite3_prepare_v2(db, req, -1, &stmt, 0);
-  rc = sqlite3_exec(db, req, callback, (void*)data, &err_msg);
+  rc = sqlite3_exec(db, req, responseType, (void*)sensor, &err_msg);
 
   // fermeture de la base de données
   sqlite3_close(db);
@@ -134,13 +186,12 @@ int getTypesDB(){
 
 }
 
-int getPiecesDB(){
+int getPieceDB(char *id, char *sensor){
   sqlite3 *db;
   char *err_msg;
   sqlite3_stmt *stmt;
   char req[255];
   int rc, s;
-  const char* data = "Callback function called";
 
 
   // initialisation de la graine pour les nbs aléatoires
@@ -150,10 +201,12 @@ int getPiecesDB(){
   rc=sqlite3_open("database.db", &db);
   
   // requête SQL select
-  sprintf(req,"SELECT * FROM Pieces;");
+  strcpy(req,"SELECT * FROM Pieces WHERE id_piece=" );
+  strcat(req, id);
+  strcat(req, ";");
 
   // préparation de la requête
-  rc = sqlite3_exec(db, req, callback, (void*)data, &err_msg);
+  rc = sqlite3_exec(db, req, responsePiece, (void*)sensor, &err_msg);
 
   // fermeture de la base de données
   sqlite3_close(db);

@@ -19,22 +19,32 @@ void processRequest(int newSocket, char buffer[256]){
 	//getSensors(newSocket);
 	//getTypes(newSocket);
 	//getPieces(newSocket);
-
+	char * buff = 0;
 	char reply[20480];
 	char file [20480];
+	long length; 
 	FILE *fp;
 	strcpy(reply, "HTTP/1.1 200 OK\n");
-	strcat(reply, "Content-Type: text/html; charset=utf-8\n\n");
-	fp=fopen("./index.html", "r");
-	long length; 
-	length = ftell(fp);
+	char *line;
+	line = strtok(buffer, "\n");
 
-	fread(file, sizeof(char[20480]), sizeof(length), fp);
+	printf("%s\n", line);
+	if ((strncmp(line, "GET / HTTP/1.1", 10) == 0) || (strncmp(line, "GET /index.html HTTP/1.1", 10) == 0) )
+		completePageIndex(fp, &reply);
+		
+	if (strncmp(line, "GET /Consumption.html HTTP/1.1", 21) == 0 )
+		completePageConsumption(fp, &reply);
 
-	strcat(reply, file);
-	write(newSocket, reply, strlen(reply));
+	if (strncmp(line, "GET /formCapteur.html HTTP/1.1", 21) == 0 )
+		createPageForm(fp, &reply);
+
+	if (strncmp(line, "GET /state.html HTTP/1.1", 21) == 0 )
+		completePageState(fp, &reply);
+
 	send(newSocket , reply , strlen(reply), 0);
-	fclose(fp);
+	sleep(1);
+	if (fp)
+		fclose(fp);
 }
 
 void *newRequest(void *arg){
@@ -45,12 +55,10 @@ void *newRequest(void *arg){
 	//Receive a message from client
   	read(newSocket, buffer, sizeof(buffer)-1);
 	printf("%s\n", "Message received");
-	printf("%s%s\n","buffer: ", buffer);
-
+	
 	//Code to process the request
 	processRequest(newSocket, buffer);
 
-	//close
 	close(newSocket);
 	}
 
