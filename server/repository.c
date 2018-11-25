@@ -186,6 +186,7 @@ int getTypeDB(char *id, char *sensor){
 
 }
 
+
 int getPieceDB(char *id, char *sensor){
   sqlite3 *db;
   char *err_msg;
@@ -215,6 +216,172 @@ int getPieceDB(char *id, char *sensor){
 }
 
 
+void insertSensorDB(char port[50],char id_piece[4], char id_type[4]){
+  sqlite3 *db;
+  char *err_msg;
+  sqlite3_stmt *stmt;
+  char req[255];
+  int rc, s;
+
+  // initialisation de la graine pour les nbs aléatoires
+  srand((unsigned int)time(NULL));
+
+  // ouverture de la base de données
+  rc=sqlite3_open("database.db", &db);
+
+  // insertion de données dans la base
+  
+      
+  // requête SQL insert
+  sprintf(req,"%s%s%s%s%s%s%s","INSERT INTO Capteurs(port, id_piece, id_type) VALUES('", port,"',", id_piece,",", id_type, ");");
+  printf("sql=|%s|\n",req);
+ 
+  // exécution de la requête
+  rc = sqlite3_exec(db, req, 0, 0, &err_msg);
+  printf("%s\n", err_msg);
+
+  // fermeture de la base de données
+  sqlite3_close(db);
+  return 0;
+}
+
+
+void insertTypeDB(char unite[50],char precision[50]){
+  sqlite3 *db;
+  char *err_msg;
+  sqlite3_stmt *stmt;
+  char req[255];
+  int rc, s;
+
+  // initialisation de la graine pour les nbs aléatoires
+  srand((unsigned int)time(NULL));
+
+  // ouverture de la base de données
+  rc=sqlite3_open("database.db", &db);
+
+  // insertion de données dans la base
+  
+      
+  // requête SQL insert
+  
+  sprintf(req,"%s%s%s%s%s","INSERT INTO TypeCapteurs(unite, precision) VALUES('", unite,"',", precision, ");");
+  printf("sql=|%s|\n",req);
+  // exécution de la requête
+  rc = sqlite3_exec(db, req, 0, 0, &err_msg);
+  printf("sql=|%s|\n",err_msg);
+
+  // fermeture de la base de données
+  sqlite3_close(db);
+  return 0;
+}
+
+
+void insertPieceDB(char x[4],char y[4], char z[4], char idLog[4]){
+  sqlite3 *db;
+  char *err_msg;
+  sqlite3_stmt *stmt;
+  char req[255];
+  int rc, s;
+
+  // initialisation de la graine pour les nbs aléatoires
+  srand((unsigned int)time(NULL));
+
+  // ouverture de la base de données
+  rc=sqlite3_open("database.db", &db);
+
+  // insertion de données dans la base
+  
+      
+  // requête SQL insert
+  
+  sprintf(req,"%s%s%s%s%s%s%s%s%s","INSERT INTO Pieces(x, y, z, id_logement) VALUES(", x,",", y,",",z,",", idLog, ");");
+  printf("sql=|%s|\n",req);
+  // exécution de la requête
+  rc = sqlite3_exec(db, req, 0, 0, &err_msg);
+  printf("sql=|%s|\n",err_msg);
+
+  // fermeture de la base de données
+  sqlite3_close(db);
+  return 0;
+}
+
+
+char *getIdPiece(char x[4],char y[4], char z[4], char idLog[4]){
+  sqlite3 *db;
+  char *err_msg;
+  sqlite3_stmt *stmt;
+  char req[255];
+  int rc, s;
+
+  // ouverture de la base de données
+  rc=sqlite3_open("database.db", &db);
+
+
+  // lecture dans la base
+  // requête SQL select
+  sprintf(req,"%s%s%s%s%s%s%s%s","SELECT id_piece FROM Pieces WHERE x =",x, " and y=", y,  " and z=", z, " and id_logement=", idLog ,";");
+  printf("sql=|%s|\n",req);
+  // préparation de la requête
+  rc=sqlite3_prepare_v2(db, req, -1, &stmt, 0);
+  // parcours des lignes résultantes    
+  // lecture de la ligne suivante
+  s=sqlite3_step(stmt);
+  // ligne existante
+  if (s==SQLITE_ROW){
+  // récupération de la valeur de la colonne i
+    const char *val=sqlite3_column_text(stmt, 0);
+    // affichage de la valeur
+    printf("%s\n",val);
+
+    // fermeture de la base de données
+    sqlite3_close(db);
+    return val;
+  }
+    // fermeture de la base de données
+    sqlite3_close(db);
+    return NULL;
+ 
+}
+
+char *getIdType(char unite[50],char precision[50]){
+  sqlite3 *db;
+  char *err_msg;
+  sqlite3_stmt *stmt;
+  char req[255];
+  int rc, s;
+
+  // ouverture de la base de données
+  rc=sqlite3_open("database.db", &db);
+
+
+  // lecture dans la base
+  // requête SQL select
+  sprintf(req,"%s%s%s%s%s","SELECT id_type FROM TypeCapteurs WHERE unite ='",unite, "' and precision=", precision,  ";");
+  printf("sql=|%s|\n",req);
+  // préparation de la requête
+  rc=sqlite3_prepare_v2(db, req, -1, &stmt, 0);
+  // parcours des lignes résultantes    
+  // lecture de la ligne suivante
+  s=sqlite3_step(stmt);
+  // ligne existante
+  if (s==SQLITE_ROW){
+  // récupération de la valeur de la colonne i
+    const char *val=sqlite3_column_text(stmt, 0);
+    // affichage de la valeur
+    printf("%s\n",val);
+
+    // fermeture de la base de données
+    sqlite3_close(db);
+    return val;
+  }
+
+  // fermeture de la base de données
+  sqlite3_close(db);
+  return NULL;
+
+}
+
+
 void updateDB(int id,int val){
   sqlite3 *db;
   char *err_msg;
@@ -237,4 +404,9 @@ void updateDB(int id,int val){
   printf("sql=|%s|\n",req);
   // exécution de la requête
   rc = sqlite3_exec(db, req, 0, 0, &err_msg);
+
+  // fermeture de la base de données
+  sqlite3_close(db);
+  return 0;
+
 }

@@ -17,31 +17,7 @@ struct string {
 };
 
 
-//SEGURAMENTE SE BORRA. VER
-void parseEntryDB(int newSocket, char buffer[256]){
-	char val[256];
-	char *id_capteur;
-	char *value;
-	int valint;
-	int id;
-
-	//parsing input
-	id_capteur = strtok(buffer, " ");
-	value = strtok(NULL, " ");
-	strcpy(val, value);
-	id = atoi(id_capteur);
-	valint = atoi(val);
-
-	printf("%s%d\n","type: " , id);
-	printf("%s%d\n","value: " , valint);
-
-	updateDB(id, valint);
-
-	//Send the message back to client
-	write(newSocket, buffer, 255);
-
-}
-
+//Parse Methods
 void parseWeather(char *buff)
 {
 	//get current day and convert it to string
@@ -83,6 +59,112 @@ void parseWeather(char *buff)
 	}
 	strcat(buff,"</div>\n");
 
+}
+
+void parseSensorInput(char *line){
+	//parse line
+	//GET /form?Port=1&X=1&Y=1&Z=1&Precision=1&Unite=Fahrenheit HTTP/1.1
+	int i=0;
+	int n = 0;
+	char port[4] = "";
+	char X[4] = "";
+	char Y[4] = "";
+	char Z[4] = "";
+	char precision[4] = "";
+	char unite[20] = "";
+	char idType[4] ="";
+	char idPiece[4] ="";
+	
+	//parse port
+	while (strncmp(line+i,"=", 1) != 0 )
+		i++;
+	i++;
+	while ( (strncmp(line+i,"&", 1) != 0 ) && (strncmp(line+i," ", 1) != 0 ) ){
+		n++;
+		i++;
+	}
+	strncpy(port, (line+i-n), n );
+
+	//parse X
+	while (strncmp(line+i,"=", 1) != 0 )
+		i++;
+	i++;
+	n=0;
+	while ( (strncmp(line+i,"&", 1) != 0 ) && (strncmp(line+i," ", 1) != 0 ) ){
+		n++;
+		i++;
+	}
+	strncpy(X, (line+i-n), n );
+
+	//parse Y
+	while (strncmp(line+i,"=", 1) != 0 )
+		i++;
+	i++;
+	n=0;
+	while ( (strncmp(line+i,"&", 1) != 0 ) && (strncmp(line+i," ", 1) != 0 ) ){
+		n++;
+		i++;
+	}
+	strncpy(Y, (line+i-n), n );
+
+	//parse Z
+	while (strncmp(line+i,"=", 1) != 0 )
+		i++;
+	i++;
+	n=0;
+	while ( (strncmp(line+i,"&", 1) != 0 ) && (strncmp(line+i," ", 1) != 0 ) ){
+		n++;
+		i++;
+	}
+	strncpy(Z, (line+i-n), n );
+
+
+	//parse precision
+	while (strncmp(line+i,"=", 1) != 0 )
+		i++;
+	i++;
+	n=0;
+	while ( (strncmp(line+i,"&", 1) != 0 ) && (strncmp(line+i," ", 1) != 0 ) ){
+		n++;
+		i++;
+	}
+	strncpy(precision, (line+i-n), n );
+
+
+	//parse precision
+	while (strncmp(line+i,"=", 1) != 0 )
+		i++;
+	i++;
+	n=0;
+	while ( (strncmp(line+i,"&", 1) != 0 ) && (strncmp(line+i," ", 1) != 0 ) ){
+		n++;
+		i++;
+	}
+	strncpy(unite, (line+i-n), n );
+
+	//add a new piece
+	//to simplify, it always use the "logement" with id = 1 
+	if (!getIdPiece(X, Y, Z, "1") ){
+		insertPieceDB(X, Y, Z, "1");
+		printf("%s\n", "Piece added successfully");
+	}
+	else
+		printf("%s\n", "Piece already storaged in the database");
+    strcpy(idPiece, getIdPiece(X, Y, Z, "1"));
+
+
+	//add a type just if it is not already storaged
+	if (!getIdType(unite, precision) ){
+		insertTypeDB(unite, precision);
+		printf("%s\n", "Type added successfully");
+	}
+	else
+		printf("%s\n", "Type already storaged in the database");
+    strcpy(idType, getIdType(unite, precision));
+//	printf("%s\n", idType);
+
+	//insert new Sensor
+	insertSensorDB(port, idPiece, idType);	
 }
 
 
@@ -220,3 +302,5 @@ void completePageIndex(FILE *fp, char *buff)
 	}
 	fclose(fp);
 }
+
+

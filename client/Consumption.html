@@ -1,6 +1,11 @@
 <html>
   <head>
     <title>IOT - DAHL</title>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta.2/css/bootstrap.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/popper.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <!--Load the AJAX API-->
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
@@ -28,18 +33,66 @@
 
         // Set chart options
         var options = {'title':'Gestion des Factures',
-                       'width':400,
-                       'height':300};
+                       'width':'100%',
+                       'height':'100%'};
 
         // Instantiate and draw our chart, passing in some options.
         var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
         chart.draw(data, options);
       }
-    </script>
-  </head>
 
-  <body>
+    </script>
+
+ </head>
+ <body>
+
+ <nav class="navbar fixed-top navbar-expand-md navbar-light bg-light">
+     <div class="container">
+       <a class="navbar-brand" href="index.html">LOGEMENT ECO-RESPONSABLE</a>
+       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+           <span class="navbar-toggler-icon"></span>
+         </button>
+       <div class="collapse navbar-collapse" id="navbarCollapse">
+         <ul class="navbar-nav mr-auto">
+           <li class="nav-item active">
+             <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
+           </li>
+           <li class="nav-item">
+             <a class="nav-link" href="Consumption.html">Consumption</a>
+           </li>
+           <li class="nav-item">
+               <a class="nav-link" href="state.html">State</a>
+           </li>
+           <li class="nav-item">
+               <a class="nav-link" href="formCapteur.html">Settings</a>
+           </li>  
+         </ul>
+       </div>
+     </div>
+   </nav>
+
     <!--Div that will hold the pie chart-->
-    <div id="chart_div"></div>
+		<main role="main" class="container">
+        <div class="row">
+          <div class="col">
+            <div class="jumbotron">
+              <h1 class="display-2">Consumption Analysis</h1>
+              <form name="myform" action="javascript:drawChart()">
+                  <button type="submit" class="btn btn-primary" >Show Graphic</button>
+              </form>  
+              <div id="chart_div"></div>  
+            </div>
+          </div>
+        </div>
+        
+  
+    <footer class="container mt-4">
+		  <div class="row">
+		    <div class="col">
+  			  <p class="text-center"><b>Sorbonne Universit&eacute</b></a></p>
+		      <p class="text-center"><b>Juan Dahl - juan.dahl@etu.upmc.fr</b></a></p>
+		    </div>
+		  </div>
+		</footer>
   </body>
 </html>
