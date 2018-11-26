@@ -257,16 +257,21 @@ void completePageState(FILE *fp, char *buff)
 
 void completePageConsumption(FILE *fp, char *buff)
 {
+	char *value[10];
+	char type[20] = "";
 	strcat(buff, "Content-Type: text/html\n\n");
 	fp=fopen("../client/Consumption.html", "r");
 
 	//Load the html in buff string
 	char line[256];
 	while (fgets(line, sizeof(line), fp))  {
-		if(strncmp(line, "  <tbody>", 9) == 0) //upadte
+		if(strncmp(line, "data.addRows([", 12) == 0) //upadte
 		{
 			strcat(buff, (char*)line);
-			getSensorsDB(buff);
+			getMesureDB("electricite", buff);
+			getMesureDB("eau", buff);
+			getMesureDB("dechets", buff);
+
 		}
 		else
 			strcat(buff, (char*)line);

@@ -129,6 +129,16 @@ static int responseType(void * sensor, int argc, char **argv, char **azColName){
     return 0;
 }
 
+static int responseMesure(void * sensor, int argc, char **argv, char **azColName){
+    
+    
+    strcat(sensor, argv[0]);
+    strcat(sensor, "],");
+    
+    return 0;
+}
+
+
 
 int getSensorsDB(char *data){
   sqlite3 *db;
@@ -154,6 +164,7 @@ int getSensorsDB(char *data){
   return 0;
 
 }
+
 
 
 int getTypeDB(char *id, char *sensor){
@@ -186,14 +197,12 @@ int getTypeDB(char *id, char *sensor){
 
 }
 
-
 int getPieceDB(char *id, char *sensor){
   sqlite3 *db;
   char *err_msg;
   sqlite3_stmt *stmt;
   char req[255];
   int rc, s;
-
 
   // initialisation de la graine pour les nbs aléatoires
   srand((unsigned int)time(NULL));
@@ -208,6 +217,42 @@ int getPieceDB(char *id, char *sensor){
 
   // préparation de la requête
   rc = sqlite3_exec(db, req, responsePiece, (void*)sensor, &err_msg);
+
+  // fermeture de la base de données
+  sqlite3_close(db);
+  return 0;
+
+}
+
+
+int getMesureDB(char typeFacture[20], char *sensor){
+  sqlite3 *db;
+  char *err_msg;
+  sqlite3_stmt *stmt;
+  char req[255];
+  int rc, s;
+
+  // initialisation de la graine pour les nbs aléatoires
+  srand((unsigned int)time(NULL));
+
+  // ouverture de la base de données
+  rc=sqlite3_open("database.db", &db);
+  
+  // requête SQL select
+  strcpy(req,"SELECT SUM(valeur_consumee) FROM Facture WHERE type_facture='");
+  strcat(req,typeFacture);
+  strcat(req,"';" );
+  printf("sql=|%s|\n",req);
+
+
+  strcat(sensor, "['");
+  strcat(sensor, typeFacture);
+  strcat(sensor, "', ");
+  
+
+  // préparation de la requête
+  rc = sqlite3_exec(db, req, responseMesure, (void*)sensor, &err_msg);
+
 
   // fermeture de la base de données
   sqlite3_close(db);
@@ -238,7 +283,6 @@ void insertSensorDB(char port[50],char id_piece[4], char id_type[4]){
  
   // exécution de la requête
   rc = sqlite3_exec(db, req, 0, 0, &err_msg);
-  printf("%s\n", err_msg);
 
   // fermeture de la base de données
   sqlite3_close(db);
@@ -268,7 +312,6 @@ void insertTypeDB(char unite[50],char precision[50]){
   printf("sql=|%s|\n",req);
   // exécution de la requête
   rc = sqlite3_exec(db, req, 0, 0, &err_msg);
-  printf("sql=|%s|\n",err_msg);
 
   // fermeture de la base de données
   sqlite3_close(db);
@@ -298,7 +341,6 @@ void insertPieceDB(char x[4],char y[4], char z[4], char idLog[4]){
   printf("sql=|%s|\n",req);
   // exécution de la requête
   rc = sqlite3_exec(db, req, 0, 0, &err_msg);
-  printf("sql=|%s|\n",err_msg);
 
   // fermeture de la base de données
   sqlite3_close(db);
@@ -334,10 +376,12 @@ char *getIdPiece(char x[4],char y[4], char z[4], char idLog[4]){
     printf("%s\n",val);
 
     // fermeture de la base de données
+    sqlite3_finalize(stmt);
     sqlite3_close(db);
     return val;
   }
     // fermeture de la base de données
+    sqlite3_finalize(stmt);
     sqlite3_close(db);
     return NULL;
  
@@ -371,11 +415,13 @@ char *getIdType(char unite[50],char precision[50]){
     printf("%s\n",val);
 
     // fermeture de la base de données
+    sqlite3_finalize(stmt);
     sqlite3_close(db);
     return val;
   }
 
   // fermeture de la base de données
+  sqlite3_finalize(stmt);
   sqlite3_close(db);
   return NULL;
 

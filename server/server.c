@@ -15,12 +15,12 @@
 //buffer declaration
 void processRequest(int newSocket, char buffer[256]){
 	char * buff = 0;
-	char reply[20480];
-	char file [20480];
-	long length; 
+	char reply[20480] = "";
+	char file [20480] = "";
+	long length = 0; 
 	FILE *fp;
 	strcpy(reply, "HTTP/1.1 200 OK\n");
-	char *line;
+	char *line = "";
 	if (buffer)
 		line = strtok(buffer, "\n");
 
@@ -48,7 +48,7 @@ void processRequest(int newSocket, char buffer[256]){
 	}
 
 	send(newSocket , reply , strlen(reply), 0);
-	sleep(1);
+	sleep(2);
 }
 
 void *newRequest(void *arg){
